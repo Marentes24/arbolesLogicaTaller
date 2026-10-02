@@ -1,10 +1,10 @@
 /** Representa cada elemento dentro del árbol. */
-public class ArbolesLogicaTallerNodo {
+public class Nodo {
     Object valor;
-    ArbolesLogicaTallerNodo hijoIzquierdo;
-    ArbolesLogicaTallerNodo hijoDerecho;
+    Nodo hijoIzquierdo;
+    Nodo hijoDerecho;
 
-    public ArbolesLogicaTallerNodo(Object valor) {
+    public Nodo(Object valor) {
         this.valor = valor;
     }
 

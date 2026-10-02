@@ -3,15 +3,15 @@ import java.util.Iterator;
 import java.util.List;
 
 /** Árbol binario de búsqueda que también implementa el TAD Arbolable. */
-public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable {
-    private ArbolesLogicaTallerNodo raiz;
+public class ArbolBinario implements Arbol {
+    private Nodo raiz;
 
     public void insertarValor(int dato) {
         raiz = insertarRecursivo(raiz, dato);
     }
 
-    private ArbolesLogicaTallerNodo insertarRecursivo(ArbolesLogicaTallerNodo nodo, int dato) {
-        if (nodo == null) return new ArbolesLogicaTallerNodo(dato);
+    private Nodo insertarRecursivo(Nodo nodo, int dato) {
+        if (nodo == null) return new Nodo(dato);
 
         int datoActual = (Integer) nodo.valor;
         if (dato < datoActual) nodo.hijoIzquierdo = insertarRecursivo(nodo.hijoIzquierdo, dato);
@@ -24,7 +24,7 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
         return contarNodos(raiz);
     }
 
-    private int contarNodos(ArbolesLogicaTallerNodo nodo) {
+    private int contarNodos(Nodo nodo) {
         return nodo == null ? 0 : 1 + contarNodos(nodo.hijoIzquierdo) + contarNodos(nodo.hijoDerecho);
     }
 
@@ -41,26 +41,26 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
     @Override
     @SuppressWarnings("rawtypes")
     public Iterator iterator() {
-        List<ArbolesLogicaTallerNodo> nodos = new ArrayList<>();
+        List<Nodo> nodos = new ArrayList<>();
         nodosPreorden(raiz, nodos);
         return nodos.iterator();
     }
 
     @Override
-    public Object padreDe(ArbolesLogicaTallerNodo nodo) {
+    public Object padreDe(Nodo nodo) {
         return buscarPadre(raiz, nodo);
     }
 
-    private ArbolesLogicaTallerNodo buscarPadre(ArbolesLogicaTallerNodo actual, ArbolesLogicaTallerNodo buscado) {
+    private Nodo buscarPadre(Nodo actual, Nodo buscado) {
         if (actual == null || actual == buscado) return null;
         if (actual.hijoIzquierdo == buscado || actual.hijoDerecho == buscado) return actual;
-        ArbolesLogicaTallerNodo encontrado = buscarPadre(actual.hijoIzquierdo, buscado);
+        Nodo encontrado = buscarPadre(actual.hijoIzquierdo, buscado);
         return encontrado != null ? encontrado : buscarPadre(actual.hijoDerecho, buscado);
     }
 
     @Override
-    public ArbolesLogicaTallerLista hijosDe(ArbolesLogicaTallerNodo nodo) {
-        ArbolesLogicaTallerLista resultado = new ArbolesLogicaTallerLista();
+    public Lista hijosDe(Nodo nodo) {
+        Lista resultado = new Lista();
         if (pertenece(nodo)) {
             if (nodo.hijoIzquierdo != null) resultado.add(nodo.hijoIzquierdo);
             if (nodo.hijoDerecho != null) resultado.add(nodo.hijoDerecho);
@@ -69,27 +69,27 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
     }
 
     @Override
-    public boolean esInterno(ArbolesLogicaTallerNodo nodo) {
+    public boolean esInterno(Nodo nodo) {
         return pertenece(nodo) && (nodo.hijoIzquierdo != null || nodo.hijoDerecho != null);
     }
 
     @Override
-    public boolean esHoja(ArbolesLogicaTallerNodo nodo) {
+    public boolean esHoja(Nodo nodo) {
         return pertenece(nodo) && nodo.hijoIzquierdo == null && nodo.hijoDerecho == null;
     }
 
     @Override
-    public boolean reemplazarNodo(ArbolesLogicaTallerNodo actual, ArbolesLogicaTallerNodo nuevo) {
+    public boolean reemplazarNodo(Nodo actual, Nodo nuevo) {
         if (nuevo == null || !pertenece(actual)) return false;
         actual.valor = nuevo.valor;
         return true;
     }
 
-    private boolean pertenece(ArbolesLogicaTallerNodo buscado) {
+    private boolean pertenece(Nodo buscado) {
         return contiene(raiz, buscado);
     }
 
-    private boolean contiene(ArbolesLogicaTallerNodo actual, ArbolesLogicaTallerNodo buscado) {
+    private boolean contiene(Nodo actual, Nodo buscado) {
         return actual != null && (actual == buscado || contiene(actual.hijoIzquierdo, buscado)
                 || contiene(actual.hijoDerecho, buscado));
     }
@@ -100,7 +100,7 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
         return resultado;
     }
 
-    private void preorden(ArbolesLogicaTallerNodo nodo, List<Object> resultado) {
+    private void preorden(Nodo nodo, List<Object> resultado) {
         if (nodo != null) {
             resultado.add(nodo.valor);
             preorden(nodo.hijoIzquierdo, resultado);
@@ -114,7 +114,7 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
         return resultado;
     }
 
-    private void inorden(ArbolesLogicaTallerNodo nodo, List<Object> resultado) {
+    private void inorden(Nodo nodo, List<Object> resultado) {
         if (nodo != null) {
             inorden(nodo.hijoIzquierdo, resultado);
             resultado.add(nodo.valor);
@@ -128,7 +128,7 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
         return resultado;
     }
 
-    private void postorden(ArbolesLogicaTallerNodo nodo, List<Object> resultado) {
+    private void postorden(Nodo nodo, List<Object> resultado) {
         if (nodo != null) {
             postorden(nodo.hijoIzquierdo, resultado);
             postorden(nodo.hijoDerecho, resultado);
@@ -136,7 +136,7 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
         }
     }
 
-    private void nodosPreorden(ArbolesLogicaTallerNodo nodo, List<ArbolesLogicaTallerNodo> resultado) {
+    private void nodosPreorden(Nodo nodo, List<Nodo> resultado) {
         if (nodo != null) {
             resultado.add(nodo);
             nodosPreorden(nodo.hijoIzquierdo, resultado);
@@ -144,17 +144,17 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
         }
     }
 
-    public static ArbolesLogicaTallerBinario desdeRecorridos(String preorden, String inorden) {
+    public static ArbolBinario desdeRecorridos(String preorden, String inorden) {
         if (preorden == null || inorden == null || preorden.length() != inorden.length()) {
             throw new IllegalArgumentException("Los recorridos deben tener la misma cantidad de nodos.");
         }
-        ArbolesLogicaTallerBinario arbol = new ArbolesLogicaTallerBinario();
+        ArbolBinario arbol = new ArbolBinario();
         int[] posicionPreorden = {0};
         arbol.raiz = construir(preorden, inorden, 0, inorden.length() - 1, posicionPreorden);
         return arbol;
     }
 
-    private static ArbolesLogicaTallerNodo construir(String preorden, String inorden, int inicio, int fin,
+    private static Nodo construir(String preorden, String inorden, int inicio, int fin,
                                                     int[] posicionPreorden) {
         if (inicio > fin) return null;
         if (posicionPreorden[0] >= preorden.length()) {
@@ -165,14 +165,14 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
         if (posicionInorden < inicio || posicionInorden > fin) {
             throw new IllegalArgumentException("Los recorridos no son válidos.");
         }
-        ArbolesLogicaTallerNodo nodo = new ArbolesLogicaTallerNodo(valor);
+        Nodo nodo = new Nodo(valor);
         nodo.hijoIzquierdo = construir(preorden, inorden, inicio, posicionInorden - 1, posicionPreorden);
         nodo.hijoDerecho = construir(preorden, inorden, posicionInorden + 1, fin, posicionPreorden);
         return nodo;
     }
 
     public static String postordenDesdeRecorridos(String preorden, String inorden) {
-        ArbolesLogicaTallerBinario arbol = desdeRecorridos(preorden, inorden);
+        ArbolBinario arbol = desdeRecorridos(preorden, inorden);
         StringBuilder resultado = new StringBuilder();
         for (Object valor : arbol.recorridoPostorden()) resultado.append(valor);
         return resultado.toString();
@@ -182,7 +182,7 @@ public class ArbolesLogicaTallerBinario implements ArbolesLogicaTallerArbolable 
         mostrarNodo(raiz, "", true);
     }
 
-    private void mostrarNodo(ArbolesLogicaTallerNodo nodo, String prefijo, boolean esIzquierdo) {
+    private void mostrarNodo(Nodo nodo, String prefijo, boolean esIzquierdo) {
         if (nodo == null) return;
         mostrarNodo(nodo.hijoDerecho, prefijo + (esIzquierdo ? "│   " : "    "), false);
         System.out.println(prefijo + (esIzquierdo ? "└── " : "┌── ") + nodo.valor);
